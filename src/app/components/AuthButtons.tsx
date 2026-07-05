@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { auth } from "@/lib/firebase";
 
 import {
@@ -13,6 +14,7 @@ import {
 
 export default function AuthButtons() {
   const [user, setUser] = useState<User | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -30,11 +32,16 @@ export default function AuthButtons() {
 
       console.log("✅ Login Successful:", result.user);
 
-      alert(`Welcome ${result.user.displayName}!`);
+      const savedRole = localStorage.getItem("brightcornerRole");
+
+      if (savedRole) {
+        router.push("/dashboard");
+      } else {
+        router.push("/onboarding");
+      }
     } catch (error: any) {
       console.error("Firebase Error:", error);
 
-      // Ignore this harmless error
       if (error.code === "auth/cancelled-popup-request") {
         return;
       }
@@ -48,8 +55,8 @@ export default function AuthButtons() {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-
-      alert("Logged out successfully.");
+      localStorage.removeItem("brightcornerRole");
+      router.push("/login");
     } catch (error: any) {
       console.error(error);
 
@@ -78,13 +85,9 @@ export default function AuthButtons() {
             />
           )}
 
-          <h2 className="text-2xl font-bold">
-            {user.displayName}
-          </h2>
+          <h2 className="text-2xl font-bold">{user.displayName}</h2>
 
-          <p className="text-gray-400 mt-2 break-all">
-            {user.email}
-          </p>
+          <p className="text-gray-400 mt-2 break-all">{user.email}</p>
 
           <button
             onClick={handleLogout}

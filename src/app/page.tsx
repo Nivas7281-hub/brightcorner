@@ -1,3 +1,4 @@
+import Link from "next/link";
 import AuthButtons from "./components/AuthButtons";
 import Testimonials from "./components/Testimonials";
 import HowItWorks from "./components/HowItWorks";
@@ -33,16 +34,21 @@ export default function Home() {
           </p>
 
           <div className="flex flex-col md:flex-row gap-4 justify-center mb-8">
-            <button className="bg-white text-black px-8 py-4 rounded-2xl font-semibold hover:scale-105 transition duration-300">
-              Start Learning
-            </button>
-            <button className="border border-gray-700 px-8 py-4 rounded-2xl font-semibold hover:bg-white hover:text-black transition duration-300">
-              Become a Tutor
-            </button>
+            <Link
+  href="/login"
+  className="bg-white text-black px-8 py-4 rounded-2xl font-semibold hover:scale-105 transition duration-300"
+>
+  Start Learning
+</Link>
+            <Link
+  href="/login"
+  className="border border-gray-700 px-8 py-4 rounded-2xl font-semibold hover:bg-white hover:text-black transition duration-300"
+>
+  Become a Tutor
+</Link>
           </div>
 
-          {/* This is where your Google Login Button renders */}
-          <AuthButtons />
+        
 
         </div>
 
