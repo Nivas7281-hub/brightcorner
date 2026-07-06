@@ -1,28 +1,10 @@
 "use client";
 
-import { getCourses } from "@/services/courseService";
-import type { Course } from "@/types/course";
-import { useEffect, useState } from "react";
+import { useCourses } from "@/hooks/useCourses";
 import Link from "next/link";
 
 export default function CoursesPage() {
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchCourses() {
-      try {
-        const coursesData = await getCourses();
-        setCourses(coursesData);
-      } catch (error) {
-        console.error("Error fetching courses:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchCourses();
-  }, []);
+  const { courses, loading } = useCourses();
 
   if (loading) {
     return (
