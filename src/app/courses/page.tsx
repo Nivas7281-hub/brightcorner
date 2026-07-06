@@ -1,7 +1,8 @@
 "use client";
 
-import { useCourses } from "@/hooks/useCourses";
 import Link from "next/link";
+import { useCourses } from "@/hooks/useCourses";
+import CourseCard from "@/components/course/CourseCard";
 
 export default function CoursesPage() {
   const { courses, loading } = useCourses();
@@ -19,7 +20,10 @@ export default function CoursesPage() {
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Courses</h1>
+            <h1 className="text-3xl font-bold text-gray-900">
+              Courses
+            </h1>
+
             <p className="mt-2 text-gray-600">
               Learn practical skills and move closer to getting hired.
             </p>
@@ -38,6 +42,7 @@ export default function CoursesPage() {
             <h2 className="text-xl font-semibold text-gray-900">
               No courses yet
             </h2>
+
             <p className="mt-2 text-gray-600">
               Create your first course to display it here.
             </p>
@@ -45,39 +50,10 @@ export default function CoursesPage() {
         ) : (
           <div className="grid gap-6 md:grid-cols-3">
             {courses.map((course) => (
-              <div
+              <CourseCard
                 key={course.id}
-                className="rounded-2xl bg-white p-6 shadow hover:shadow-lg"
-              >
-                <p className="mb-3 text-sm font-medium text-gray-500">
-                  {course.category}
-                </p>
-
-                <h2 className="text-xl font-bold text-gray-900">
-                  {course.title}
-                </h2>
-
-                <p className="mt-3 line-clamp-3 text-gray-600">
-                  {course.description}
-                </p>
-
-                <div className="mt-5 flex items-center justify-between">
-                  <span className="rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-700">
-                    {course.level}
-                  </span>
-
-                  <span className="font-bold text-gray-900">
-                    ₹{course.price}
-                  </span>
-                </div>
-
-                <Link
-                  href={`/courses/${course.id}`}
-                  className="mt-6 block rounded-xl bg-black px-4 py-3 text-center font-semibold text-white hover:bg-gray-800"
-                >
-                  View Course
-                </Link>
-              </div>
+                course={course}
+              />
             ))}
           </div>
         )}
