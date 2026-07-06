@@ -1,19 +1,9 @@
 "use client";
 
+import { getCourses } from "@/services/courseService";
+import type { Course } from "@/types/course";
 import { useEffect, useState } from "react";
-import { db } from "@/lib/firebase";
-import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import Link from "next/link";
-
-type Course = {
-  id: string;
-  title: string;
-  category: string;
-  level: string;
-  description: string;
-  price: number;
-  status: string;
-};
 
 export default function CoursesPage() {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -22,15 +12,8 @@ export default function CoursesPage() {
   useEffect(() => {
     async function fetchCourses() {
       try {
-        const q = query(collection(db, "courses"), orderBy("createdAt", "desc"));
-        const snapshot = await getDocs(q);
-
-        const courseList = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as Course[];
-
-        setCourses(courseList);
+        const coursesData = await getCourses();
+        setCourses(coursesData);
       } catch (error) {
         console.error("Error fetching courses:", error);
       } finally {

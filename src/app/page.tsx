@@ -1,10 +1,10 @@
 import Link from "next/link";
-import AuthButtons from "./components/AuthButtons";
-import Testimonials from "./components/Testimonials";
-import HowItWorks from "./components/HowItWorks";
-import Foot from "./components/Foot"; // ✅ Fixed import path
-import Features from "./components/Features";
-import Nav from "./components/Nav"; // ✅ Fixed import path
+import AuthButtons from "@/components/AuthButtons";
+import Testimonials from "@/components/Testimonials";
+import HowItWorks from "@/components/HowItWorks";
+import Foot from "@/components/Foot";
+import Features from "@/components/Features";
+import Nav from "@/components/Nav";
 
 export default function Home() {
   return (
