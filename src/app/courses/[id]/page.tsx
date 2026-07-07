@@ -1,7 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import Link from "next/link";
+
 import { db, auth } from "@/lib/firebase";
+import { useSections } from "@/hooks/useSections";
+
 import {
   doc,
   getDoc,
@@ -12,8 +17,6 @@ import {
   where,
   getDocs,
 } from "firebase/firestore";
-import { useParams } from "next/navigation";
-import Link from "next/link";
 
 type Course = {
   title: string;
@@ -27,6 +30,8 @@ type Course = {
 export default function CourseDetailsPage() {
   const params = useParams();
   const courseId = params.id as string;
+
+  const { sections, loading: sectionsLoading } = useSections(courseId);
 
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
@@ -141,7 +146,9 @@ export default function CourseDetailsPage() {
             {course.category}
           </p>
 
-          <h1 className="text-4xl font-bold text-gray-900">{course.title}</h1>
+          <h1 className="text-4xl font-bold text-gray-900">
+            {course.title}
+          </h1>
 
           <div className="mt-5 flex flex-wrap gap-3">
             <span className="rounded-full bg-gray-100 px-4 py-2 text-sm text-gray-700">
@@ -163,26 +170,71 @@ export default function CourseDetailsPage() {
 
           <div className="mt-10 grid gap-5 md:grid-cols-3">
             <div className="rounded-2xl bg-gray-50 p-5">
-              <h3 className="font-bold text-gray-900">Practical Learning</h3>
+              <h3 className="font-bold text-gray-900">
+                Practical Learning
+              </h3>
               <p className="mt-2 text-sm text-gray-600">
                 Learn through real examples, exercises, and guided practice.
               </p>
             </div>
 
             <div className="rounded-2xl bg-gray-50 p-5">
-              <h3 className="font-bold text-gray-900">Assessments</h3>
+              <h3 className="font-bold text-gray-900">
+                Assessments
+              </h3>
               <p className="mt-2 text-sm text-gray-600">
                 Session quizzes and a final test will unlock certification.
               </p>
             </div>
 
             <div className="rounded-2xl bg-gray-50 p-5">
-              <h3 className="font-bold text-gray-900">Career Path</h3>
+              <h3 className="font-bold text-gray-900">
+                Career Path
+              </h3>
               <p className="mt-2 text-sm text-gray-600">
                 Complete the course, earn badges, increase level, and apply.
               </p>
             </div>
           </div>
+
+          {/* Course Sections */}
+
+          <section className="mt-12">
+            <h2 className="mb-5 text-2xl font-bold text-gray-900">
+              Course Sections
+            </h2>
+
+            {sectionsLoading ? (
+              <p className="text-gray-600">Loading sections...</p>
+            ) : sections.length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-gray-300 p-6 text-center">
+                <p className="text-gray-500">
+                  No sections added yet.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {sections.map((section) => (
+                  <div
+                    key={section.id}
+                    className="rounded-2xl border border-gray-200 p-5 hover:border-black transition"
+                  >
+                    <p className="text-sm font-semibold text-gray-500">
+                      Section {section.order}
+                    </p>
+
+                    <h3 className="mt-1 text-xl font-bold">
+                      {section.title}
+                    </h3>
+
+                    <p className="mt-2 text-gray-600">
+                      {section.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
 
           {isEnrolled ? (
             <button className="mt-10 rounded-xl bg-green-600 px-8 py-4 font-semibold text-white">
