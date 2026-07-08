@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getSectionsByCourseId } from "@/services/sectionService";
 import type { Section } from "@/types/section";
 
@@ -6,25 +6,27 @@ export function useSections(courseId: string) {
   const [sections, setSections] = useState<Section[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function loadSections() {
-      try {
-        const data: Section[] = await getSectionsByCourseId(courseId);
-        setSections(data);
-      } catch (error) {
-        console.error("Error loading sections:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
+  const loadSections = useCallback(async () => {
+    if (!courseId) return;
 
-    if (courseId) {
-      loadSections();
+    try {
+      setLoading(true);
+      const data = await getSectionsByCourseId(courseId);
+      setSections(data);
+    } catch (error) {
+      console.error("Error loading sections:", error);
+    } finally {
+      setLoading(false);
     }
   }, [courseId]);
+
+  useEffect(() => {
+    loadSections();
+  }, [loadSections]);
 
   return {
     sections,
     loading,
+    refreshSections: loadSections,
   };
 }
